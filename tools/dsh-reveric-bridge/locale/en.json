@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Reveric bridge",
+    "description": "Drive Reveric through its local debug endpoint: read works, generate character avatars, run read-only checks, and hand tasks to Reveric's built-in agent.",
+    "detail": "docs/DETAIL.md"
+  }
+}
