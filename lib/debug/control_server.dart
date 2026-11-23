@@ -74,6 +74,10 @@ class DebugControlServer {
   final Map<String, Map<String, dynamic>> _jobs = <String, Map<String, dynamic>>{};
   int _jobSequence = 0;
 
+  /// 异步 agent 回合期间持有的会话订阅，避免 autoDispose 提前回收。
+  final Map<String, ProviderSubscription<AiChatSessionState>> _agentKeepAlive =
+      <String, ProviderSubscription<AiChatSessionState>>{};
+
   bool get isRunning => _server != null;
   int get port => _server?.port ?? 0;
 
@@ -191,7 +195,15 @@ class DebugControlServer {
           );
           return;
         case '/agent/turn':
-          await _writeJson(response, HttpStatus.ok, await _agentTurn(body));
+          if (request.method == 'GET') {
+            await _writeJson(
+              response,
+              HttpStatus.ok,
+              _agentTurnStatus(request.uri.queryParameters['sessionId']),
+            );
+          } else {
+            await _writeJson(response, HttpStatus.ok, await _agentTurn(body));
+          }
           return;
         case '/jobs':
           await _writeJson(response, HttpStatus.ok, {'jobs': _jobs.values.toList()});
@@ -471,6 +483,24 @@ class DebugControlServer {
       };
     }
 
+    // 异步模式：立即返回 sessionId，调用方用 GET /agent/turn?sessionId= 轮询。
+    // 长回合（读剧本、改分镜）动辄数分钟，同步等待容易被调用方读超时掐断。
+    if (_boolOption(body, 'async', fallback: false)) {
+      _agentKeepAlive.putIfAbsent(
+        sessionId,
+        () => _container.listen(aiChatSessionProvider(sessionId), (_, _) {}),
+      );
+      return {
+        'dispatched': true,
+        'async': true,
+        'mode': mode,
+        'workId': workId,
+        'sessionId': sessionId,
+        'running': true,
+        'pollPath': '/agent/turn?sessionId=$sessionId',
+      };
+    }
+
     // 会话 provider 是 autoDispose：先持订阅，保证轮询与取结果期间不被回收。
     final keepAlive = _container.listen(aiChatSessionProvider(sessionId), (_, _) {});
     try {
@@ -502,6 +532,46 @@ class DebugControlServer {
       };
     } finally {
       keepAlive.close();
+    }
+  }
+
+  /// 查询异步 agent 回合的状态与结果；回合结束后释放 keep-alive 订阅。
+  Map<String, dynamic> _agentTurnStatus(String? sessionId) {
+    if (sessionId == null || sessionId.trim().isEmpty) {
+      throw const _ControlError(
+        'sessionId_required',
+        'Query parameter sessionId is required',
+      );
+    }
+    final keepAlive = _agentKeepAlive[sessionId];
+    final local = keepAlive == null
+        ? _container.listen(aiChatSessionProvider(sessionId), (_, _) {})
+        : null;
+    try {
+      final runtime = _container.read(aiChatRuntimeProvider(sessionId));
+      final session = _container.read(aiChatSessionProvider(sessionId));
+      final messages = session.messages;
+      String? reply;
+      for (final message in messages.reversed) {
+        if (message.role == AiMessageRole.assistant &&
+            message.content.trim().isNotEmpty) {
+          reply = message.content;
+          break;
+        }
+      }
+      final running = runtime.isRequestInFlight;
+      if (!running) {
+        _agentKeepAlive.remove(sessionId)?.close();
+      }
+      return {
+        'sessionId': sessionId,
+        'running': running,
+        'completed': !running,
+        'messageCount': messages.length,
+        'reply': reply,
+      };
+    } finally {
+      local?.close();
     }
   }
 
@@ -1479,6 +1549,15 @@ class DebugControlServer {
     final parsed = value is int ? value : int.tryParse('$value');
     if (parsed == null) return fallback;
     return parsed.clamp(min, max);
+  }
+
+  bool _boolOption(
+    Map<String, dynamic> body,
+    String key, {
+    required bool fallback,
+  }) {
+    final value = body[key];
+    return value is bool ? value : fallback;
   }
 }
 
