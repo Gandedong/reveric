@@ -50,11 +50,18 @@ class DoubaoTtsClient extends AudioClient {
         references.isNotEmpty) {
       throw const AudioException('invalid_config');
     }
+    final instruction = request.parameters.instructions?.trim() ?? '';
     return {
       'user': {'uid': request.providerId},
       'req_params': {
         'text': request.prompt,
         'speaker': request.parameters.voice,
+        // 豆包 2.0 的语音指令只认 req_params.additions.context_texts，
+        // 写进 text 会被当成正文念出来。
+        if (instruction.isNotEmpty)
+          'additions': jsonEncode({
+            'context_texts': [instruction],
+          }),
         'audio_params': {
           'format': 'mp3',
           'sample_rate': ?request.parameters.sampleRate,

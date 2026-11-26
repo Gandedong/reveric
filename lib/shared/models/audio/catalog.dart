@@ -112,6 +112,32 @@ final audioModelsCatalog = <String, AudioModelCatalogEntry>{
     ),
   ),
   // https://platform.qianwenai.com/docs/api-reference/audio-generation
+  // 同一条渠道上的 3.0 Plus：Token Plan 目前只开放这一个语音合成型号，
+  // 系统音色仅 longanhuan_v3.6（其它 v3.1/v3.6 音色会返回 cosyvoice 411）；
+  // 其余为音色复刻生成的基础音色，调用方式与系统音色一致。
+  'qwen-audio-3.0-tts-plus': AudioModelCatalogEntry(
+    capabilities: AudioModelCapabilities(
+      speech: true,
+      supportsInstructions: true,
+      maxPromptCharacters: 20000,
+      voices: [
+        'longanhuan_v3.6',
+        'qwen-audio-3.0-tts-plus-longhuifengyi',
+        'qwen-audio-3.0-tts-plus-longyanhuilu',
+        'qwen-audio-3.0-tts-plus-longnixiulian',
+        'qwen-audio-3.0-tts-plus-longyingsongliu',
+        'qwen-audio-3.0-tts-plus-longmeixiaolan',
+        'qwen-audio-3.0-tts-plus-longyimuling',
+        'qwen-audio-3.0-tts-plus-longlanghongmo',
+        'qwen-audio-3.0-tts-plus-longliulanxiang',
+      ],
+    ),
+    requestDefaults: AudioRequestDefaults(
+      voice: ConfigValue('longanhuan_v3.6'),
+      responseFormat: ConfigValue('wav'),
+      sampleRate: ConfigValue(24000),
+    ),
+  ),
   'qwen-audio-3.1-tts-next': AudioModelCatalogEntry(
     capabilities: AudioModelCapabilities(
       maxPromptCharacters: 3000,
@@ -165,6 +191,7 @@ final audioModelsCatalog = <String, AudioModelCatalogEntry>{
     entry.key: AudioModelCatalogEntry(
       capabilities: AudioModelCapabilities(
         speech: true,
+        supportsInstructions: true,
         maxPromptCharacters: 3000,
         voices: entry.value,
       ),

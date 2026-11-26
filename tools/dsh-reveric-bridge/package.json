@@ -1,0 +1,25 @@
+{
+  "name": "dsh-reveric-bridge",
+  "version": "0.2.2",
+  "private": true,
+  "type": "module",
+  "description": "Bridge Reveric's local debug control endpoint into DSH tools: status, batch avatar generation, screenplay checks, batch text replacement, and agent turns.",
+  "exports": {
+    ".": "./index.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "docs",
+    "README.md",
+    "icon.svg"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}
