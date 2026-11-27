@@ -105,6 +105,8 @@ class AudioRequestDefaults {
   const AudioRequestDefaults({
     this._voice,
     this._instructions,
+    this._contexts,
+    this._speed,
     this._responseFormat,
     this._sampleRate,
     this._bitrate,
@@ -114,6 +116,14 @@ class AudioRequestDefaults {
   String? get voice => _voice?.value;
   final ConfigValue<String>? _instructions;
   String? get instructions => _instructions?.value;
+
+  /// 多轮上下文（如上一句对方台词），按从旧到新排列。
+  final ConfigValue<List<String>>? _contexts;
+  List<String> get contexts => _contexts?.value ?? const [];
+
+  /// 语速倍率，1.0 为正常；仅支持该参数的渠道会消费。
+  final ConfigValue<double>? _speed;
+  double? get speed => _speed?.value;
   final ConfigValue<String>? _responseFormat;
   String? get responseFormat => _responseFormat?.value;
   final ConfigValue<int>? _sampleRate;
@@ -125,6 +135,8 @@ class AudioRequestDefaults {
       AudioRequestDefaults(
         voice: overrides._voice ?? _voice,
         instructions: overrides._instructions ?? _instructions,
+        contexts: overrides._contexts ?? _contexts,
+        speed: overrides._speed ?? _speed,
         responseFormat: overrides._responseFormat ?? _responseFormat,
         sampleRate: overrides._sampleRate ?? _sampleRate,
         bitrate: overrides._bitrate ?? _bitrate,
@@ -133,6 +145,8 @@ class AudioRequestDefaults {
   Map<String, dynamic> toJson() => {
     if (_voice != null) 'voice': voice,
     if (_instructions != null) 'instructions': instructions,
+    if (_contexts != null) 'contexts': contexts,
+    if (_speed != null) 'speed': speed,
     if (_responseFormat != null) 'response_format': responseFormat,
     if (_sampleRate != null) 'sample_rate': sampleRate,
     if (_bitrate != null) 'bitrate': bitrate,
@@ -145,6 +159,12 @@ class AudioRequestDefaults {
             : null,
         instructions: json.containsKey('instructions')
             ? ConfigValue(json['instructions'] as String?)
+            : null,
+        contexts: json.containsKey('contexts')
+            ? ConfigValue((json['contexts'] as List?)?.cast<String>())
+            : null,
+        speed: json.containsKey('speed')
+            ? ConfigValue((json['speed'] as num?)?.toDouble())
             : null,
         responseFormat: json.containsKey('response_format')
             ? ConfigValue(json['response_format'] as String?)

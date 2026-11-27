@@ -188,6 +188,10 @@ void main() {
     expect(segments[2].instructions, '低声');
     expect(segments[3].instructions, isEmpty);
     expect(segments.last.instructions, isEmpty);
+    expect(segments[2].contexts, isEmpty);
+    expect(segments[3].contexts, ['甲：走吧。']);
+    // 换场后不把上一场的对白带进上下文。
+    expect(segments.last.contexts, isEmpty);
   });
 
   test(

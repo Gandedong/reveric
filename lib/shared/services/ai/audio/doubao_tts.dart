@@ -51,21 +51,27 @@ class DoubaoTtsClient extends AudioClient {
       throw const AudioException('invalid_config');
     }
     final instruction = request.parameters.instructions?.trim() ?? '';
+    final contexts = [
+      ...request.parameters.contexts,
+      if (instruction.isNotEmpty) instruction,
+    ];
+    final speed = request.parameters.speed;
     return {
       'user': {'uid': request.providerId},
       'req_params': {
         'text': request.prompt,
         'speaker': request.parameters.voice,
-        // 豆包 2.0 的语音指令只认 req_params.additions.context_texts，
+        // 豆包 2.0 的语音指令与多轮上文都走 additions.context_texts，
         // 写进 text 会被当成正文念出来。
-        if (instruction.isNotEmpty)
-          'additions': jsonEncode({
-            'context_texts': [instruction],
-          }),
+        if (contexts.isNotEmpty)
+          'additions': jsonEncode({'context_texts': contexts}),
         'audio_params': {
           'format': 'mp3',
           'sample_rate': ?request.parameters.sampleRate,
           'bit_rate': ?request.parameters.bitrate,
+          // speech_rate：0 为正常，100 为 2 倍，-50 为 0.5 倍。
+          if (speed != null)
+            'speech_rate': ((speed - 1) * 100).round().clamp(-50, 100).toInt(),
         },
       },
     };

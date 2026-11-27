@@ -114,6 +114,10 @@ class NarrationService {
         parameters: AudioRequestDefaults(
           voice: ConfigValue(segment.voice),
           instructions: ConfigValue(segment.instructions),
+          contexts: segment.contexts.isEmpty
+              ? null
+              : ConfigValue(segment.contexts),
+          speed: segment.speed == null ? null : ConfigValue(segment.speed),
         ),
       ),
     );

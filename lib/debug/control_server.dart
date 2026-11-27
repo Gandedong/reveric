@@ -996,6 +996,12 @@ class DebugControlServer {
     }
     final voice = _stringOption(body, 'voice', fallback: 'longanhuan_v3.6');
     final instruction = _stringOption(body, 'instruction');
+    final contexts =
+        (body['contexts'] as List?)?.whereType<String>().toList(
+          growable: false,
+        ) ??
+        const <String>[];
+    final speed = (body['speed'] as num?)?.toDouble();
     final database = _container.read(appDatabaseProvider);
     var providerId = _stringOption(body, 'providerId');
     var modelId = _stringOption(body, 'modelId');
@@ -1030,6 +1036,8 @@ class DebugControlServer {
         voice: voice,
         sceneId: '',
         instructions: instruction,
+        contexts: contexts,
+        speed: speed,
       ),
       Completer<void>().future,
     );

@@ -37,8 +37,8 @@ class NarrationOrchestrator extends ChangeNotifier {
   late List<NarrationSegment> segments;
   late NarrationGenerate _generate;
   late Future<NarrationPlayer> Function(NarrationAudio) _createPlayer;
-  final _cache = <(String, String, String), _AudioResult>{};
-  final _requests = <(String, String, String), _PendingAudio>{};
+  final _cache = <(String, String, String, String, String?), _AudioResult>{};
+  final _requests = <(String, String, String, String, String?), _PendingAudio>{};
   Future<void> _transport = Future.value();
   NarrationPlayer? _player;
   int _cacheBytes = 0;

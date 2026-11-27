@@ -115,10 +115,25 @@ class NarrationSegment {
     required this.sceneId,
     this.characterId,
     this.instructions = '',
+    this.contexts = const [],
+    this.speed,
   });
   final String text, voice, instructions;
   final String? sceneId, characterId;
-  (String, String, String) get cacheKey => (text, voice, instructions);
+
+  /// 多轮上下文，按从旧到新排列。
+  final List<String> contexts;
+
+  /// 语速倍率，1.0 为正常。
+  final double? speed;
+
+  (String, String, String, String, String?) get cacheKey => (
+    text,
+    voice,
+    instructions,
+    contexts.join('\u0000'),
+    speed?.toString(),
+  );
 }
 
 List<NarrationSegment> compileNarration(
@@ -307,6 +322,7 @@ List<NarrationSegment> _compileScreenplayNarration(
   bool supportsInstructions,
 ) {
   final segments = <NarrationSegment>[];
+  final recentDialogue = <String>[];
   String? speaker;
   var extension = '';
   var direction = '';
@@ -314,10 +330,12 @@ List<NarrationSegment> _compileScreenplayNarration(
     String? text;
     String? characterId;
     var instructions = '';
+    var contexts = const <String>[];
     switch (element.type) {
       case ScreenplayElementType.scene_heading:
         speaker = null;
         extension = direction = '';
+        recentDialogue.clear();
         if (settings.includeNarration) {
           if (element.locationId != null &&
               !source.locationNames.containsKey(element.locationId)) {
@@ -352,6 +370,7 @@ List<NarrationSegment> _compileScreenplayNarration(
             extension,
             direction,
           ].where((s) => s.trim().isNotEmpty).join('；');
+          contexts = List.unmodifiable(recentDialogue);
         }
       case ScreenplayElementType.action:
       case ScreenplayElementType.subtitle:
@@ -381,8 +400,17 @@ List<NarrationSegment> _compileScreenplayNarration(
           sceneId: element.sceneId,
           characterId: characterId,
           instructions: instructions,
+          contexts: contexts,
         ),
       );
+    }
+    if (element.type == ScreenplayElementType.dialogue &&
+        supportsInstructions) {
+      final name = source.characterNames[speaker] ?? speaker ?? '';
+      recentDialogue.add('$name：${element.text.trim()}');
+      if (recentDialogue.length > 6) {
+        recentDialogue.removeAt(0);
+      }
     }
   }
   if (segments.isEmpty) {
