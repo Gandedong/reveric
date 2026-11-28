@@ -32,6 +32,17 @@ abstract final class LocaleKeys {
   static const audioVoiceDoubaoYunzhou = 'audio.voice.doubaoYunzhou';
   static const audioVoiceDoubaoMeilinvyou = 'audio.voice.doubaoMeilinvyou';
   static const audioVoiceDoubaoShenyeboke = 'audio.voice.doubaoShenyeboke';
+  static const audioVoiceDoubaoShaonianjiangjun =
+      'audio.voice.doubaoShaonianjiangjun';
+  static const audioVoiceDoubaoAnrenqinzhu = 'audio.voice.doubaoAnrenqinzhu';
+  static const audioVoiceDoubaoShenchenzongcai =
+      'audio.voice.doubaoShenchenzongcai';
+  static const audioVoiceDoubaoAoqilingren = 'audio.voice.doubaoAoqilingren';
+  static const audioVoiceDoubaoAomanqingnian =
+      'audio.voice.doubaoAomanqingnian';
+  static const audioVoiceDoubaoFuheigongzi = 'audio.voice.doubaoFuheigongzi';
+  static const audioVoiceDoubaoAomanjiaosheng =
+      'audio.voice.doubaoAomanjiaosheng';
   static const audioVoiceQwenHuan31 = 'audio.voice.qwenHuan31';
   static const audioVoiceQwenLingxin31 = 'audio.voice.qwenLingxin31';
   static const audioVoiceQwenNanchuan31 = 'audio.voice.qwenNanchuan31';

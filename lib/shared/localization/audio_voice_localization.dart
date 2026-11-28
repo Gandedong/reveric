@@ -19,6 +19,19 @@ const _audioVoiceNameKeys = <String, String>{
   'zh_male_m191_uranus_bigtts': LocaleKeys.audioVoiceDoubaoYunzhou,
   'zh_female_meilinvyou_moon_bigtts': LocaleKeys.audioVoiceDoubaoMeilinvyou,
   'zh_male_shenyeboke_moon_bigtts': LocaleKeys.audioVoiceDoubaoShenyeboke,
+  'ICL_uranus_zh_male_shaonianjiangjun_tob':
+      LocaleKeys.audioVoiceDoubaoShaonianjiangjun,
+  'ICL_uranus_zh_male_anrenqinzhu_tob': LocaleKeys.audioVoiceDoubaoAnrenqinzhu,
+  'ICL_uranus_zh_male_shenchenzongcai_tob':
+      LocaleKeys.audioVoiceDoubaoShenchenzongcai,
+  'ICL_uranus_zh_male_aoqilingren_tob':
+      LocaleKeys.audioVoiceDoubaoAoqilingren,
+  'ICL_uranus_zh_male_aomanqingnian_tob':
+      LocaleKeys.audioVoiceDoubaoAomanqingnian,
+  'ICL_uranus_zh_male_fuheigongzi_tob':
+      LocaleKeys.audioVoiceDoubaoFuheigongzi,
+  'ICL_uranus_zh_female_aomanjiaosheng_tob':
+      LocaleKeys.audioVoiceDoubaoAomanjiaosheng,
   'longanhuan_v3.1': LocaleKeys.audioVoiceQwenHuan31,
   'longanlingxin_v3.1': LocaleKeys.audioVoiceQwenLingxin31,
   'xunanchuan_v3.1': LocaleKeys.audioVoiceQwenNanchuan31,
