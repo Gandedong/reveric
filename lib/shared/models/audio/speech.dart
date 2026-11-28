@@ -18,6 +18,7 @@ const doubaoTtsVoices = {
     'ICL_uranus_zh_male_aomanqingnian_tob',
     'ICL_uranus_zh_male_fuheigongzi_tob',
     'ICL_uranus_zh_female_aomanjiaosheng_tob',
+    'ICL_uranus_zh_female_zhixinjiejie_tob',
   ],
   'seed-tts-1.0': [
     'zh_female_meilinvyou_moon_bigtts',

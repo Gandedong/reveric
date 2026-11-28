@@ -43,6 +43,8 @@ abstract final class LocaleKeys {
   static const audioVoiceDoubaoFuheigongzi = 'audio.voice.doubaoFuheigongzi';
   static const audioVoiceDoubaoAomanjiaosheng =
       'audio.voice.doubaoAomanjiaosheng';
+  static const audioVoiceDoubaoZhixinjiejie =
+      'audio.voice.doubaoZhixinjiejie';
   static const audioVoiceQwenHuan31 = 'audio.voice.qwenHuan31';
   static const audioVoiceQwenLingxin31 = 'audio.voice.qwenLingxin31';
   static const audioVoiceQwenNanchuan31 = 'audio.voice.qwenNanchuan31';

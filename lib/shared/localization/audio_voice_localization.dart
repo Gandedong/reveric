@@ -32,6 +32,8 @@ const _audioVoiceNameKeys = <String, String>{
       LocaleKeys.audioVoiceDoubaoFuheigongzi,
   'ICL_uranus_zh_female_aomanjiaosheng_tob':
       LocaleKeys.audioVoiceDoubaoAomanjiaosheng,
+  'ICL_uranus_zh_female_zhixinjiejie_tob':
+      LocaleKeys.audioVoiceDoubaoZhixinjiejie,
   'longanhuan_v3.1': LocaleKeys.audioVoiceQwenHuan31,
   'longanlingxin_v3.1': LocaleKeys.audioVoiceQwenLingxin31,
   'xunanchuan_v3.1': LocaleKeys.audioVoiceQwenNanchuan31,
